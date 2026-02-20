@@ -26,8 +26,10 @@ jobs:
 
       - name: Validate Registry
         run: |
+          export PYTHONPATH=$PWD
           python -m eatgf_engine.cli.main validate-registry registry_v1.1.json
 
       - name: Run Compliance Evaluation
         run: |
+          export PYTHONPATH=$PWD
           python -m eatgf_engine.cli.main evaluate-compliance registry_v1.1.json org_profile.json evidence.json
