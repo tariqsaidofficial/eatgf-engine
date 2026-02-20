@@ -1,5 +1,7 @@
 # EATGF Engine v1.1.0
 
+![CI](https://github.com/tariqsaidofficial/eatgf-engine/actions/workflows/engine-ci.yml/badge.svg)
+
 ## Deterministic Governance-as-Code
 
 This repository contains the canonical, institutionally frozen EATGF Engine v1.1.0. It is architecturally real, audit-grade, and strictly aligned with the published whitepaper and annex.
@@ -58,6 +60,15 @@ This repository contains the canonical, institutionally frozen EATGF Engine v1.1
 
 ### For All Contributions
 
+---
+
+## Related Projects
+
+- **EATGF Framework (Knowledge Core)**  
+  https://github.com/tariqsaidofficial/eatgf-framework
+
+- **Governance Documentation Portal**  
+  https://github.com/tariqsaidofficial/governance-docs-site
 - v1.2 and beyond require ADR and version increment
 - No silent evolution permitted
 
