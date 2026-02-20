@@ -1,0 +1,175 @@
+{
+  "version": "1.1",
+  "controls": [
+    {
+      "control_id": "EATGF-EDM-GOV-01",
+      "domain": "EDM",
+      "primary_authority": "ISO 27001 A.5.3",
+      "authority_class": "ISO27001",
+      "atomic_objective": "Establish and maintain formal governance operating structure with clearly defined organizational roles, decision rights, committee authorities, and escalation mechanisms for IT and AI governance.",
+      "lifecycle_state": "Approved",
+      "applicability": {
+        "environments": ["Cloud", "SaaS", "On-Prem", "Hybrid"],
+        "ai_usage": "All",
+        "mandatory": true
+      },
+      "relationships": {
+        "implements": [],
+        "enforces": [],
+        "requires": []
+      }
+    },
+    {
+      "control_id": "EATGF-EDM-RISK-01",
+      "domain": "EDM",
+      "primary_authority": "ISO 27001 A.6.1.2",
+      "authority_class": "ISO27001",
+      "atomic_objective": "Establish and formally approve IT and AI risk appetite, including defined risk tolerance thresholds and governance oversight criteria.",
+      "lifecycle_state": "Approved",
+      "applicability": {
+        "environments": ["Cloud", "SaaS", "On-Prem", "Hybrid"],
+        "ai_usage": "All",
+        "mandatory": true
+      },
+      "relationships": {
+        "implements": [],
+        "enforces": [],
+        "requires": ["EATGF-EDM-GOV-01"]
+      },
+      "decomposition": {
+        "clause": "ISO 27001 A.6.1.2",
+        "justification": "Cross-domain decomposition: governance layer separated from execution layer (APO-RISK-01)."
+      }
+    },
+    {
+      "control_id": "EATGF-EDM-BEN-01",
+      "domain": "EDM",
+      "primary_authority": "COBIT EDM02",
+      "authority_class": "COBIT",
+      "atomic_objective": "Ensure benefits realization through formal KPI tracking, performance dashboards, and governance-level reporting mechanisms.",
+      "lifecycle_state": "Approved",
+      "applicability": {
+        "environments": ["Cloud", "SaaS", "Hybrid"],
+        "ai_usage": "Optional",
+        "mandatory": true
+      },
+      "relationships": {
+        "implements": [],
+        "enforces": [],
+        "requires": ["EATGF-EDM-GOV-01"]
+      }
+    },
+    {
+      "control_id": "EATGF-AI-RISK-01",
+      "domain": "EDM",
+      "primary_authority": "ISO 42001 Clause 6",
+      "authority_class": "ISO42001",
+      "atomic_objective": "Establish and maintain AI-specific risk governance framework addressing bias, fairness, accountability, and oversight responsibilities.",
+      "lifecycle_state": "Approved",
+      "applicability": {
+        "environments": ["Cloud", "SaaS", "On-Prem", "Hybrid"],
+        "ai_usage": "Conditional",
+        "mandatory": true
+      },
+      "relationships": {
+        "implements": [],
+        "enforces": [],
+        "requires": ["EATGF-EDM-GOV-01", "EATGF-EDM-RISK-01"]
+      }
+    },
+    {
+      "control_id": "EATGF-DSS-SEC-01",
+      "domain": "DSS",
+      "primary_authority": "ISO 27001 A.5.15-5.18",
+      "authority_class": "ISO27001",
+      "atomic_objective": "Maintain centralized identity and access governance including RBAC enforcement, MFA, service account lifecycle, and periodic access reviews.",
+      "lifecycle_state": "Approved",
+      "applicability": {
+        "environments": ["Cloud", "SaaS", "On-Prem", "Hybrid"],
+        "ai_usage": "All",
+        "mandatory": true
+      },
+      "relationships": {
+        "implements": [],
+        "enforces": [],
+        "requires": []
+      }
+    },
+    {
+      "control_id": "EATGF-DSS-ENC-01",
+      "domain": "DSS",
+      "primary_authority": "ISO 27001 A.8.21-8.22",
+      "authority_class": "ISO27001",
+      "atomic_objective": "Establish and enforce cryptographic controls including encryption standards, key management procedures, and verification audits.",
+      "lifecycle_state": "Approved",
+      "applicability": {
+        "environments": ["Cloud", "SaaS", "On-Prem", "Hybrid"],
+        "ai_usage": "All",
+        "mandatory": true
+      },
+      "relationships": {
+        "implements": [],
+        "enforces": [],
+        "requires": []
+      }
+    },
+    {
+      "control_id": "EATGF-DSS-VULN-01",
+      "domain": "DSS",
+      "primary_authority": "ISO 27001 A.8.16-8.25",
+      "authority_class": "ISO27001",
+      "atomic_objective": "Identify vulnerabilities through systematic scanning, apply patch SLAs, manage exceptions, and maintain vulnerability tracking lifecycle.",
+      "lifecycle_state": "Approved",
+      "applicability": {
+        "environments": ["Cloud", "SaaS", "On-Prem", "Hybrid"],
+        "ai_usage": "All",
+        "mandatory": true
+      },
+      "relationships": {
+        "implements": [],
+        "enforces": [],
+        "requires": []
+      }
+    },
+    {
+      "control_id": "EATGF-DSS-INC-01",
+      "domain": "DSS",
+      "primary_authority": "ISO 27001 A.5.24-5.27",
+      "authority_class": "ISO27001",
+      "atomic_objective": "Establish and execute formal incident response lifecycle including classification, escalation, response, root cause analysis, and continuous improvement.",
+      "lifecycle_state": "Approved",
+      "applicability": {
+        "environments": ["Cloud", "SaaS", "On-Prem", "Hybrid"],
+        "ai_usage": "All",
+        "mandatory": true
+      },
+      "relationships": {
+        "implements": [],
+        "enforces": [],
+        "requires": []
+      }
+    },
+    {
+      "control_id": "EATGF-API-SEC-01",
+      "domain": "DSS",
+      "primary_authority": "ISO 27001 A.8.3",
+      "authority_class": "ISO27001",
+      "atomic_objective": "Enforce API-layer security including OAuth or mTLS authentication, role-based authorization, gateway rate limiting, threat detection, and audit logging.",
+      "lifecycle_state": "Approved",
+      "applicability": {
+        "environments": ["Cloud", "SaaS", "Hybrid", "On-Prem"],
+        "ai_usage": "All",
+        "mandatory": true
+      },
+      "relationships": {
+        "implements": [],
+        "enforces": [],
+        "requires": []
+      },
+      "decomposition": {
+        "clause": "ISO 27001 A.8.3",
+        "justification": "Layer specialization: API protocol layer separated from organizational IAM."
+      }
+    }
+  ]
+}
