@@ -26,8 +26,8 @@ jobs:
 
       - name: Validate Registry
         run: |
-          python eatgf_engine/cli/main.py validate-registry eatgf_engine/registry_v1.1.json
+          python cli/main.py validate-registry eatgf_engine/registry_v1.1.json
 
       - name: Run Compliance Evaluation
         run: |
-          python eatgf_engine/cli/main.py evaluate-compliance eatgf_engine/registry_v1.1.json eatgf_engine/org_profile.json eatgf_engine/evidence.json
+          python cli/main.py evaluate-compliance eatgf_engine/registry_v1.1.json eatgf_engine/org_profile.json eatgf_engine/evidence.json
