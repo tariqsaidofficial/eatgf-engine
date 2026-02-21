@@ -17,6 +17,11 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
+      - name: Debug structure
+        run: |
+          pwd
+          ls -R
+          python -c "import sys; print(sys.path)"
           python-version: '3.11'
 
       - name: Set PYTHONPATH
