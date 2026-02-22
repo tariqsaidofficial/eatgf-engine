@@ -17,20 +17,28 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-      - name: Debug structure
-        run: |
-          pwd
-          ls -R
-          python -c "import sys; print(sys.path)"
           python-version: '3.11'
+
+      - name: Debug environment
+        run: |
+          echo "PWD:"
+          pwd
+          echo "Directory structure:"
+          ls -R
+          echo "Python sys.path:"
+          python - << 'EOF'
+          import sys
+          for p in sys.path:
+              print(p)
+          EOF
 
       - name: Set PYTHONPATH
         run: echo "PYTHONPATH=$GITHUB_WORKSPACE" >> $GITHUB_ENV
 
       - name: Validate Registry
         run: |
-          python -m eatgf_engine.cli.main validate-registry eatgf_engine/registry_v1.1.json
+          python -m eatgf_engine.cli.main validate-registry registry_v1.1.json
 
       - name: Run Compliance Evaluation
         run: |
-          python -m eatgf_engine.cli.main evaluate-compliance eatgf_engine/registry_v1.1.json eatgf_engine/org_profile.json eatgf_engine/evidence.json
+          python -m eatgf_engine.cli.main evaluate-compliance registry_v1.1.json org_profile.json evidence.json
