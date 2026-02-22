@@ -19,26 +19,25 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Debug environment
-        run: |
-          echo "PWD:"
-          pwd
-          echo "Directory structure:"
-          ls -R
-          echo "Python sys.path:"
-          python - << 'EOF'
-          import sys
-          for p in sys.path:
-              print(p)
-          EOF
-
       - name: Set PYTHONPATH
         run: echo "PYTHONPATH=$GITHUB_WORKSPACE" >> $GITHUB_ENV
 
-      - name: Validate Registry
+      # --- REGISTRY VALIDATION ---
+      - name: Validate Registry Structure
         run: |
           python -m eatgf_engine.cli.main validate-registry registry_v1.1.json
 
-      - name: Run Compliance Evaluation
+      # --- HAPPY PATH EVALUATION ---
+      - name: Run Compliance Evaluation (Happy Path)
         run: |
           python -m eatgf_engine.cli.main evaluate-compliance registry_v1.1.json org_profile.json evidence.json
+
+      # --- ZERO EVIDENCE REGRESSION ---
+      - name: Zero Evidence Test
+        run: |
+          python -m eatgf_engine.cli.main evaluate-compliance registry_v1.1.json org_profile.json tests/ci_zero_evidence.json
+
+      # --- NEGATIVE STATUS TEST (MUST FAIL) ---
+      - name: Negative Evidence Test (Expect Failure)
+        run: |
+          python -m eatgf_engine.cli.main evaluate-compliance registry_v1.1.json org_profile.json tests/ci_invalid_status.json && exit 1 || exit 0
