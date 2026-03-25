@@ -29,6 +29,16 @@ eatgf-engine evaluate-compliance registry_v1.1.json org_profile.json evidence.js
   - `--format human|json` (default: `human`)
   - `--output-json <path>`
 
+### org_profile Contract (v1.1)
+
+Required fields:
+
+- `environment` (allowed values only: `Cloud`, `SaaS`, `On-Prem`, `Hybrid`)
+- `ai_usage` (boolean: `true`/`false`)
+- `apis_exposed` (boolean: `true`/`false`)
+
+The engine uses fail-fast validation for `org_profile.json`. Missing fields or invalid values are rejected with explicit error messages.
+
 ### Key Features
 
 - Deterministic compliance computation

@@ -6,6 +6,10 @@ import json
 from dataclasses import asdict
 from eatgf_engine.engine.evaluator import evaluate_compliance
 from eatgf_engine.engine.report import print_compliance_report
+from eatgf_engine.engine.org_profile_validator import (
+    validate_org_profile,
+    OrgProfileValidationError,
+)
 
 
 def main():
@@ -49,7 +53,13 @@ def main():
             print(str(e))
             exit(2)
         with open(args.org_profile, "r", encoding="utf-8") as f:
-            org_profile = json.load(f)
+            raw_org_profile = json.load(f)
+        try:
+            org_profile = validate_org_profile(raw_org_profile)
+        except OrgProfileValidationError as e:
+            print("Org profile validation FAILED:")
+            print(str(e))
+            exit(2)
         from eatgf_engine.engine.evidence_loader import load_evidence, EvidenceValidationError
         try:
             evidence = load_evidence(args.evidence, registry.controls)
