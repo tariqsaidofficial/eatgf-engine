@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "eatgf-engine"
+version = "1.1.0"
+description = "Deterministic compliance engine for the Enterprise AI-Aligned Technical Governance Framework (EATGF)."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+authors = [
+  { name = "EATGF Project" }
+]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.11",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent"
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/tariqsaidofficial/eatgf-engine"
+Source = "https://github.com/tariqsaidofficial/eatgf-engine"
+Documentation = "https://github.com/tariqsaidofficial/governance-docs-site"
+
+[project.scripts]
+eatgf-engine = "eatgf_engine.cli.main:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["eatgf_engine*"]

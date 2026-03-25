@@ -3,18 +3,28 @@ from eatgf_engine.registry.loader import load_registry
 from eatgf_engine.registry.validators import RegistryValidationError
 
 import json
+from dataclasses import asdict
 from eatgf_engine.engine.evaluator import evaluate_compliance
 from eatgf_engine.engine.report import print_compliance_report
 
 
 def main():
     import argparse
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        prog="eatgf-engine",
+        description="Deterministic compliance CLI for EATGF Engine v1.1.0"
+    )
     parser.add_argument('command', choices=['validate-registry', 'evaluate-compliance'])
     parser.add_argument('registry', help='Registry JSON file')
     parser.add_argument('org_profile', nargs='?', help='Organization profile JSON file')
     parser.add_argument('evidence', nargs='?', help='Evidence JSON file')
-    parser.add_argument('--output-json', dest='output_json', help='Output compliance report as JSON')
+    parser.add_argument('--output-json', dest='output_json', help='Write compliance report JSON to a file path')
+    parser.add_argument(
+        '--format',
+        choices=['human', 'json'],
+        default='human',
+        help='Output format for evaluate-compliance command (default: human)'
+    )
     args = parser.parse_args()
 
     if args.command == 'validate-registry':
@@ -30,7 +40,7 @@ def main():
             exit(2)
     elif args.command == 'evaluate-compliance':
         if not (args.org_profile and args.evidence):
-            print("Usage: python -m eatgf_engine.cli.main evaluate-compliance registry_v1.1.json org_profile.json evidence.json [--output-json report.json]")
+            print("Usage: eatgf-engine evaluate-compliance registry_v1.1.json org_profile.json evidence.json [--format human|json] [--output-json report.json]")
             exit(1)
         try:
             registry = load_registry(args.registry)
@@ -48,15 +58,20 @@ def main():
             print(str(e))
             exit(2)
         summary = evaluate_compliance(registry.controls, org_profile, evidence)
-        print_compliance_report(summary)
+        from eatgf_engine.compliance.report_builder import build_report
+        from eatgf_engine.compliance.report_serializer import serialize_report
+        report = build_report(
+            registry_version=registry.version,
+            engine_version="1.1.0",
+            evaluation_result=summary
+        )
+
+        if args.format == 'human':
+            print_compliance_report(summary)
+        else:
+            print(json.dumps(asdict(report), indent=2, sort_keys=True))
+
         if args.output_json:
-            from eatgf_engine.compliance.report_builder import build_report
-            from eatgf_engine.compliance.report_serializer import serialize_report
-            report = build_report(
-                registry_version=registry.version,
-                engine_version="1.1",
-                evaluation_result=summary
-            )
             serialize_report(report, args.output_json)
             print(f"Compliance report written to {args.output_json}")
 

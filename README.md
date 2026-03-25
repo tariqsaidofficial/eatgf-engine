@@ -6,6 +6,29 @@
 
 This repository contains the canonical, institutionally frozen EATGF Engine v1.1.0. It is architecturally real, audit-grade, and strictly aligned with the published whitepaper and annex.
 
+### Installation
+
+```bash
+pip install -e .
+```
+
+After installation, use the CLI entrypoint:
+
+```bash
+eatgf-engine validate-registry registry_v1.1.json
+eatgf-engine evaluate-compliance registry_v1.1.json org_profile.json evidence.json --format human
+eatgf-engine evaluate-compliance registry_v1.1.json org_profile.json evidence.json --format json --output-json compliance_report.json
+```
+
+### CLI Contract (v1.1)
+
+- Commands:
+  - `validate-registry`
+  - `evaluate-compliance`
+- Output flags:
+  - `--format human|json` (default: `human`)
+  - `--output-json <path>`
+
 ### Key Features
 
 - Deterministic compliance computation
@@ -67,10 +90,10 @@ This repository contains the canonical, institutionally frozen EATGF Engine v1.1
 
 ## Related Projects
 
-- **EATGF Framework (Knowledge Core)**  
+- **EATGF Framework (Knowledge Core)**
   [tariqsaidofficial/eatgf-framework](https://github.com/tariqsaidofficial/eatgf-framework)
 
-- **Governance Documentation Portal**  
+- **Governance Documentation Portal**
   [tariqsaidofficial/governance-docs-site](https://github.com/tariqsaidofficial/governance-docs-site)
 
 ---
