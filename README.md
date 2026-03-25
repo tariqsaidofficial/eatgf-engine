@@ -60,18 +60,19 @@ This repository contains the canonical, institutionally frozen EATGF Engine v1.1
 
 ### For All Contributions
 
----
-
-## Related Projects
-
-- **EATGF Framework (Knowledge Core)**  
-  https://github.com/tariqsaidofficial/eatgf-framework
-
-- **Governance Documentation Portal**  
-  https://github.com/tariqsaidofficial/governance-docs-site
 - v1.2 and beyond require ADR and version increment
 - No silent evolution permitted
 
 ---
 
-For full details, see docs/whitepaper_v1.1.md and docs/annex_v1.1.md.
+## Related Projects
+
+- **EATGF Framework (Knowledge Core)**  
+  [tariqsaidofficial/eatgf-framework](https://github.com/tariqsaidofficial/eatgf-framework)
+
+- **Governance Documentation Portal**  
+  [tariqsaidofficial/governance-docs-site](https://github.com/tariqsaidofficial/governance-docs-site)
+
+---
+
+For full details, see [docs/whitepaper_v1.1.md](docs/whitepaper_v1.1.md) and [docs/annex_v1.1.md](docs/annex_v1.1.md).
