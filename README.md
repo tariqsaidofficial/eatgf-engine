@@ -39,6 +39,10 @@ Required fields:
 
 The engine uses fail-fast validation for `org_profile.json`. Missing fields or invalid values are rejected with explicit error messages.
 
+### evidence_metrics Status (v1.1)
+
+`evidence_metrics` is reserved for future structured evaluation and is ignored in v1.1 scoring.
+
 ### Key Features
 
 - Deterministic compliance computation
