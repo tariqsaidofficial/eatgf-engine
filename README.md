@@ -43,6 +43,21 @@ The engine uses fail-fast validation for `org_profile.json`. Missing fields or i
 
 `evidence_metrics` is reserved for future structured evaluation and is ignored in v1.1 scoring.
 
+### Adapter Packaging Policy
+
+The HTTP adapter under `adapter/` is an optional integration surface and is not part of the core deterministic engine package contract.
+
+- Core package installation (`pip install -e .`) targets CLI and engine modules under `eatgf_engine/`.
+- Adapter runtime dependencies are intentionally isolated in `adapter/requirements.txt`.
+- This separation keeps the core engine minimal, deterministic, and free from web-framework dependency coupling.
+
+When running the adapter, install its requirements explicitly:
+
+```bash
+pip install -r adapter/requirements.txt
+uvicorn adapter.main:app --reload --port 8000
+```
+
 ### Key Features
 
 - Deterministic compliance computation
@@ -60,7 +75,7 @@ The engine uses fail-fast validation for `org_profile.json`. Missing fields or i
 
 ### Structure
 
-```
+```text
 /eatgf_engine
   ├── engine/
   ├── registry/

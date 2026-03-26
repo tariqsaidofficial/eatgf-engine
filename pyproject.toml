@@ -19,7 +19,9 @@ classifiers = [
   "License :: OSI Approved :: MIT License",
   "Operating System :: OS Independent"
 ]
-dependencies = []
+dependencies = [
+  "typer>=0.12,<1.0"
+]
 
 [project.urls]
 Homepage = "https://github.com/tariqsaidofficial/eatgf-engine"

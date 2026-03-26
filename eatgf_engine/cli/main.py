@@ -1,89 +1,111 @@
-import sys
+import json
+from dataclasses import asdict
+from typing import Optional
+
+import typer
+
+from eatgf_engine.engine.evaluator import evaluate_compliance
+from eatgf_engine.engine.org_profile_validator import (
+    OrgProfileValidationError,
+    validate_org_profile,
+)
+from eatgf_engine.engine.report import print_compliance_report
 from eatgf_engine.registry.loader import load_registry
 from eatgf_engine.registry.validators import RegistryValidationError
 
-import json
-from dataclasses import asdict
-from eatgf_engine.engine.evaluator import evaluate_compliance
-from eatgf_engine.engine.report import print_compliance_report
-from eatgf_engine.engine.org_profile_validator import (
-    validate_org_profile,
-    OrgProfileValidationError,
+app = typer.Typer(
+    name='eatgf-engine',
+    add_completion=False,
+    help='Deterministic compliance CLI for EATGF Engine v1.1.0',
 )
 
 
-def main():
-    import argparse
-    parser = argparse.ArgumentParser(
-        prog="eatgf-engine",
-        description="Deterministic compliance CLI for EATGF Engine v1.1.0"
-    )
-    parser.add_argument('command', choices=['validate-registry', 'evaluate-compliance'])
-    parser.add_argument('registry', help='Registry JSON file')
-    parser.add_argument('org_profile', nargs='?', help='Organization profile JSON file')
-    parser.add_argument('evidence', nargs='?', help='Evidence JSON file')
-    parser.add_argument('--output-json', dest='output_json', help='Write compliance report JSON to a file path')
-    parser.add_argument(
+@app.command('validate-registry')
+def validate_registry(registry: str = typer.Argument(..., help='Registry JSON file')) -> None:
+    try:
+        loaded_registry = load_registry(registry)
+        typer.echo('Registry Loaded Successfully')
+        typer.echo(f'Version: {loaded_registry.version}')
+        typer.echo(f'Controls: {len(loaded_registry.controls)}')
+        typer.echo('Validation: PASSED')
+    except RegistryValidationError as exc:
+        typer.echo('Validation FAILED:')
+        typer.echo(str(exc))
+        raise typer.Exit(code=2)
+
+
+@app.command('evaluate-compliance')
+def evaluate_compliance_command(
+    registry: str = typer.Argument(..., help='Registry JSON file'),
+    org_profile: str = typer.Argument(..., help='Organization profile JSON file'),
+    evidence: str = typer.Argument(..., help='Evidence JSON file'),
+    output_json: Optional[str] = typer.Option(
+        None,
+        '--output-json',
+        help='Write compliance report JSON to a file path',
+    ),
+    output_format: str = typer.Option(
+        'human',
         '--format',
-        choices=['human', 'json'],
-        default='human',
-        help='Output format for evaluate-compliance command (default: human)'
+        help='Output format for evaluate-compliance command (human|json)',
+        case_sensitive=False,
+    ),
+) -> None:
+    normalized_format = output_format.lower()
+    if normalized_format not in {'human', 'json'}:
+        typer.echo("Invalid --format value. Allowed values: 'human', 'json'.")
+        raise typer.Exit(code=2)
+
+    try:
+        loaded_registry = load_registry(registry)
+    except RegistryValidationError as exc:
+        typer.echo('Registry validation FAILED:')
+        typer.echo(str(exc))
+        raise typer.Exit(code=2)
+
+    with open(org_profile, 'r', encoding='utf-8') as file_obj:
+        raw_org_profile = json.load(file_obj)
+
+    try:
+        validated_org_profile = validate_org_profile(raw_org_profile)
+    except OrgProfileValidationError as exc:
+        typer.echo('Org profile validation FAILED:')
+        typer.echo(str(exc))
+        raise typer.Exit(code=2)
+
+    from eatgf_engine.engine.evidence_loader import EvidenceValidationError, load_evidence
+
+    try:
+        loaded_evidence = load_evidence(evidence, loaded_registry.controls)
+    except EvidenceValidationError as exc:
+        typer.echo('Evidence validation FAILED:')
+        typer.echo(str(exc))
+        raise typer.Exit(code=2)
+
+    summary = evaluate_compliance(loaded_registry.controls, validated_org_profile, loaded_evidence)
+
+    from eatgf_engine.compliance.report_builder import build_report
+    from eatgf_engine.compliance.report_serializer import serialize_report
+
+    report = build_report(
+        registry_version=loaded_registry.version,
+        engine_version='1.1.0',
+        evaluation_result=summary,
     )
-    args = parser.parse_args()
 
-    if args.command == 'validate-registry':
-        try:
-            registry = load_registry(args.registry)
-            print("Registry Loaded Successfully")
-            print(f"Version: {registry.version}")
-            print(f"Controls: {len(registry.controls)}")
-            print("Validation: PASSED")
-        except RegistryValidationError as e:
-            print("Validation FAILED:")
-            print(str(e))
-            exit(2)
-    elif args.command == 'evaluate-compliance':
-        if not (args.org_profile and args.evidence):
-            print("Usage: eatgf-engine evaluate-compliance registry_v1.1.json org_profile.json evidence.json [--format human|json] [--output-json report.json]")
-            exit(1)
-        try:
-            registry = load_registry(args.registry)
-        except RegistryValidationError as e:
-            print("Registry validation FAILED:")
-            print(str(e))
-            exit(2)
-        with open(args.org_profile, "r", encoding="utf-8") as f:
-            raw_org_profile = json.load(f)
-        try:
-            org_profile = validate_org_profile(raw_org_profile)
-        except OrgProfileValidationError as e:
-            print("Org profile validation FAILED:")
-            print(str(e))
-            exit(2)
-        from eatgf_engine.engine.evidence_loader import load_evidence, EvidenceValidationError
-        try:
-            evidence = load_evidence(args.evidence, registry.controls)
-        except EvidenceValidationError as e:
-            print("Evidence validation FAILED:")
-            print(str(e))
-            exit(2)
-        summary = evaluate_compliance(registry.controls, org_profile, evidence)
-        from eatgf_engine.compliance.report_builder import build_report
-        from eatgf_engine.compliance.report_serializer import serialize_report
-        report = build_report(
-            registry_version=registry.version,
-            engine_version="1.1.0",
-            evaluation_result=summary
-        )
+    if normalized_format == 'human':
+        print_compliance_report(summary)
+    else:
+        typer.echo(json.dumps(asdict(report), indent=2, sort_keys=True))
 
-        if args.format == 'human':
-            print_compliance_report(summary)
-        else:
-            print(json.dumps(asdict(report), indent=2, sort_keys=True))
+    if output_json:
+        serialize_report(report, output_json)
+        typer.echo(f'Compliance report written to {output_json}')
 
-        if args.output_json:
-            serialize_report(report, args.output_json)
-            print(f"Compliance report written to {args.output_json}")
 
-if __name__ == "__main__":
+def main() -> None:
+    app()
+
+
+if __name__ == '__main__':
     main()
