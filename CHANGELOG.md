@@ -1,3 +1,7 @@
+---
+sidebar_label: "Changelog"
+---
+
 # CHANGELOG
 
 ## v1.1.0 (2026-02-20)

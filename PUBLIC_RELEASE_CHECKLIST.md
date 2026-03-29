@@ -1,3 +1,7 @@
+---
+sidebar_label: "EATGF Engine v1.1.0 — Public Release Checklist"
+---
+
 # EATGF Engine v1.1.0 — Public Release Checklist
 
 ## Repository Structure
