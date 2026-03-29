@@ -1,0 +1,2 @@
+[console_scripts]
+eatgf-engine = eatgf_engine.cli.main:main
